@@ -1,0 +1,45 @@
+name: Guardar fotografias por cor
+on:
+  workflow_dispatch:
+    inputs:
+      marcas:
+        description: "Marcas (vazio = TopTex,Roly,Stamina,TejoBrinde,JHK)"
+        required: false
+        default: ""
+      limite:
+        description: "Só os primeiros N artigos (teste). Vazio = todos"
+        required: false
+        default: ""
+      publicar:
+        description: "Publicar o resultado (sim/não)"
+        required: false
+        default: "sim"
+permissions:
+  contents: write
+jobs:
+  cores:
+    runs-on: ubuntu-latest
+    timeout-minutes: 240
+    steps:
+      - uses: actions/checkout@v4
+      - name: Preparar
+        run: pip install pillow
+      - name: Descarregar e guardar
+        env:
+          MARCAS: ${{ github.event.inputs.marcas }}
+          LIMITE: ${{ github.event.inputs.limite }}
+        run: python3 fonte/fotos_cores.py
+      - name: Tamanho
+        run: du -sh img img/cores || true
+      - name: Reconstruir o catálogo
+        if: github.event.inputs.publicar != 'não'
+        run: python3 fonte/construir.py || echo "Reconstrução adiada para a atualização diária"
+      - name: Publicar
+        if: github.event.inputs.publicar != 'não'
+        run: |
+          git config user.name "catalogo-bot"
+          git config user.email "catalogo-bot@users.noreply.github.com"
+          if [ -z "$(git status --porcelain)" ]; then echo "Nada a publicar"; exit 0; fi
+          git add -A
+          git commit -q -m "Fotografias por cor"
+          for i in 1 2 3; do git pull -q --rebase origin main && git push -q origin HEAD:main && exit 0; sleep 5; done; exit 1

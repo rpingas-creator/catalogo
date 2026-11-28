@@ -1,0 +1,40 @@
+name: Procurar fotografias de maior qualidade
+on:
+  workflow_dispatch:
+    inputs:
+      limite:
+        description: "Só os primeiros N artigos (teste). Vazio = todos"
+        required: false
+        default: ""
+      debug:
+        description: "1 = só diagnóstico, não grava"
+        required: false
+        default: ""
+      marcas:
+        description: "Marcas separadas por vírgula (vazio = TopTex,Roly,Stamina,TejoBrinde)"
+        required: false
+        default: ""
+permissions:
+  contents: write
+jobs:
+  fotos:
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    steps:
+      - uses: actions/checkout@v4
+      - name: Preparar
+        run: pip install pillow numpy
+      - name: Procurar
+        env:
+          LIMITE: ${{ github.event.inputs.limite }}
+          MARCAS: ${{ github.event.inputs.marcas }}
+          DEBUG: ${{ github.event.inputs.debug }}
+        run: python3 fonte/fotos_hd.py
+      - name: Guardar
+        run: |
+          git config user.name "catalogo-bot"
+          git config user.email "catalogo-bot@users.noreply.github.com"
+          git add fonte/fotos_hd.json fonte/fotos_hd_relatorio.txt
+          if git diff --cached --quiet; then echo "Nada a guardar"; exit 0; fi
+          git commit -q -m "Fotografias de maior qualidade (endereços oficiais dos fornecedores)"
+          for i in 1 2 3; do git pull -q --rebase origin main && git push -q origin HEAD:main && exit 0; sleep 5; done; exit 1

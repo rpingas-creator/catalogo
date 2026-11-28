@@ -1,0 +1,23 @@
+name: Atualizar catálogo
+on:
+  schedule:
+    - cron: "17 5 * * *"
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Reconstruir
+        run: python3 fonte/construir.py
+      - name: Publicar se mudou
+        run: |
+          if [ -z "$(git status --porcelain)" ]; then echo "Nada a publicar"; exit 0; fi
+          git config user.name "catalogo-bot"
+          git config user.email "catalogo-bot@users.noreply.github.com"
+          git checkout --orphan novo
+          git add -A
+          git commit -q -m "Catálogo atualizado a partir da calculadora"
+          git push -f origin novo:main

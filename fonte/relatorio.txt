@@ -1,0 +1,16 @@
+CALCULADORA (fornecedor: total, coincidem, exemplos que não coincidem)
+  'JHK': 229, 229, []
+  'Roly': 519, 483, ['5067', '7026', '8418', '1521', '9009', '6416']
+  'Stamina': 1533, 1533, []
+  'THClothes': 105, 102, ['SÃO GABRIEL', 'PÁTRIA', 'BÉRRIO']
+  'Tejo Brinde': 1032, 1029, ['IP311154', 'IP290124E', 'IP300382']
+  'TopTex': 2835, 2835, []
+FONTE DO CATÁLOGO (fornecedor: total, coincidem, exemplos)
+  'JHK': 229, 229, []
+  'Makito': 4442, 0, ['22024', '22022', '21141', '21179', '21840', '21842']
+  'Roly': 398, 390, ['CA1114', 'CA6664', 'MACWOR', 'PE0001', 'PE0002', 'TJ9985']
+  'Stamina': 1594, 1516, ['AB4111', 'AN1021', 'AN1024', 'BI4204', 'BI4212', 'BI4213']
+  'THClothes': 105, 102, ['THC-BERRIO', 'THC-PATRIA', 'THC-SAO-GABRIEL']
+  'TejoBrinde': 1517, 1027, ['300514', '380187Y', '380404Y', '380416', '380426', 'AT610004']
+  'TopTex': 2835, 2835, []
+  'Valento': 920, 0, ['ALVAREL', 'BAVAADU', 'BAVACHI', 'BAVACOC', 'BAVAGIN', 'BAVATEN']
